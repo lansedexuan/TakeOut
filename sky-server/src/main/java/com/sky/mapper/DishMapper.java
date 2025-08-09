@@ -60,10 +60,25 @@ public interface DishMapper {
     void deleteByIds(List<Long> ids);
 
     /**
-     * 根据id修改菜品
+     * 菜品启用禁用
      * @param dish
      */
     @AutoFill(value = OperationType.UPDATE)
     @Transactional
     void update(Dish dish);
+
+    /**
+     * 根据分类id查询菜品数据
+     * @param dish
+     * @return
+     */
+    List<Dish> list(Dish dish);
+
+    /**
+     * 根据套餐id查询菜品选项
+     * @param setmealId
+     * @return
+     */
+    @Select("select * from dish d left join setmeal_dish sd on d.id = sd.dish_id where sd.setmeal_id = #{setmealId}")
+    List<Dish> getBySetmealId(Long setmealId);
 }
