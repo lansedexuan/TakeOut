@@ -99,7 +99,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     public void cleanShoppingCart() {
         Long userId = BaseContext.getCurrentId();
-        shoppingCartMapper.deleteByIds(userId);
+        shoppingCartMapper.deleteById(userId);
     }
 
     /**
@@ -131,6 +131,5 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 shoppingCartMapper.updateNumberById(cart);
             }
         }
-
     }
 }
