@@ -65,4 +65,30 @@ public interface OrderMapper {
      */
     @Select("select * from orders where id = #{id}")
     Orders getById(Long id);
+
+    /**
+     * 各个状态的订单数量统计
+     * @param  status
+     * @return
+     */
+    @Select("select count(id) from orders where status = #{status}")
+    Integer countStatus(Integer status);
+
+    /**
+     * 查询订单状态和下单时间
+     * @param status
+     * @param orderTime
+     * @return
+     */
+    @Select("select * from orders where status = #{status} and order_time < #{orderTime}")
+    List<Orders> getByStatusAndOrderTimeLT(Integer status, LocalDateTime orderTime);
+
+    /**
+     * 根据订单号和用户id查询订单
+     * @param orderNumber
+     * @param userId
+     * @return
+     */
+    @Select("select * from orders where number = #{orderNumber} and user_id = #{userId}")
+    Orders getByNumberAndUserId(String orderNumber, Long userId);
 }
