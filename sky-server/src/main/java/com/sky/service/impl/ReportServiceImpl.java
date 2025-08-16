@@ -2,8 +2,10 @@ package com.sky.service.impl;
 
 import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
+import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
 import com.sky.vo.TurnoverReportVO;
+import com.sky.vo.UserReportVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,8 @@ import java.util.Map;
 public class ReportServiceImpl implements ReportService {
     @Autowired
     private OrderMapper orderMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      * 指定时间内的营业额统计
@@ -67,5 +71,55 @@ public class ReportServiceImpl implements ReportService {
                 .build();
 
         return turnoverReportVO;
+    }
+
+    /**
+     * 指定时间内的营业额统计
+     * @param begin
+     * @param end
+     * @return
+     */
+    @Override
+    public UserReportVO getUserStatistics(LocalDate begin, LocalDate end) {
+        // 若果begin>end 抛出异常
+        if(begin.isAfter(end)){
+            throw new RuntimeException("开始时间不能大于结束时间");
+        }
+
+        // 创建一个日期列表，包含begin到end的日期
+        List<LocalDate> dateList = new ArrayList<>();
+        dateList.add(begin);
+        while(!begin.equals(end)){
+            begin = begin.plusDays(1);
+            dateList.add(begin);
+        }
+
+        //select count(id) from user where create_time >= ? and create_time <= ?
+        List<Integer> newUserList = new ArrayList<>();
+        //select count(id) from user where create_time < ?
+        List<Integer> totalUserList = new ArrayList<>();
+
+        for(LocalDate date : dateList){
+            LocalDateTime beginTime = LocalDateTime.of(date, LocalTime.MIN);//00:00
+            LocalDateTime endTime = LocalDateTime.of(date, LocalTime.MAX);//23:59:59.999999999
+
+            Map map = new HashMap();
+
+            map.put("end", endTime);
+            Integer totalUser = userMapper.countByMap(map);
+            totalUserList.add(totalUser);
+
+            map.put("begin", beginTime);
+            Integer newUser = userMapper.countByMap(map);
+            newUserList.add(newUser);
+        }
+
+        UserReportVO userReportVO = UserReportVO.builder()
+                .dateList(StringUtils.join(dateList, ","))
+                .totalUserList(StringUtils.join(totalUserList, ","))
+                .newUserList(StringUtils.join(newUserList, ","))
+                .build();
+
+        return userReportVO;
     }
 }
