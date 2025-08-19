@@ -4,6 +4,7 @@
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<groupId>org.springframework.boot</groupId>
 		<version>2.7.3</version>
+		<relativePath/> <!-- 关键添加：让Maven从仓库查找而非本地相对路径 -->
 	</parent>
 	<groupId>com.sky</groupId>
 	<artifactId>sky-take-out</artifactId>
@@ -28,6 +29,27 @@
 		<jaxb-api>2.3.1</jaxb-api>
 		<poi>3.16</poi>
 	</properties>
+	<!-- 添加国内仓库，提高下载成功率 -->
+	<repositories>
+		<repository>
+			<id>aliyunmaven</id>
+			<name>阿里云公共仓库</name>
+			<url>https://maven.aliyun.com/repository/public</url>
+		</repository>
+		<repository>
+			<id>central</id>
+			<name>Maven Central Repository</name>
+			<url>https://repo.maven.apache.org/maven2</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>aliyunmaven</id>
+			<name>阿里云插件仓库</name>
+			<url>https://maven.aliyun.com/repository/public</url>
+		</pluginRepository>
+	</pluginRepositories>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

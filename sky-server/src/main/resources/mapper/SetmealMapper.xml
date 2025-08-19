@@ -2,12 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sky.mapper.SetmealMapper">
-
-    <insert id="insert">
+<!--    当你执行setmealMapper.insert(setmeal)插入数据后，数据库如果是自动生成主键（如自增 ID），需要通过配置让 MyBatis 将生成的主键值回写到实体对象中。-->
+<!--    添加了useGeneratedKeys="true"：告诉 MyBatis 使用数据库自动生成的主键-->
+<!--    添加了keyProperty="id"：指定将生成的主键值回写到实体类的id属性-->
+<!--    移除了 SQL 中的id字段和对应的参数：因为 ID 是自动生成的，不需要手动插入-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         insert into setmeal
-        (id, category_id, name, price, status, description, image, create_time, update_time, create_user, update_user)
+        (category_id, name, price, status, description, image, create_time, update_time, create_user, update_user)
         values
-        (#{id}, #{categoryId}, #{name}, #{price}, #{status}, #{description}, #{image}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser})
+        (#{categoryId}, #{name}, #{price}, #{status}, #{description}, #{image}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser})
     </insert>
 
     <select id="pageQuery" resultType="com.sky.vo.SetmealVO">
